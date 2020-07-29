@@ -526,12 +526,12 @@
           "group": "0_mainframeInteraction"
         },
         {
-          "when": "view == zowe.uss.explorer && viewItem =~ /^directory.*/",
+          "when": "view == zowe.uss.explorer && viewItem =~ /^directory|ussSession/",
           "command": "zowe.uss.createFolder",
           "group": "1_create@0"
         },
         {
-          "when": "view == zowe.uss.explorer && viewItem =~ /^directory.*/",
+          "when": "view == zowe.uss.explorer && viewItem =~ /^directory|ussSession/",
           "command": "zowe.uss.createFile",
           "group": "1_create@1"
         },

@@ -1601,6 +1601,7 @@ describe("Dataset Actions Unit Tests - Function createFile", () => {
         const testDatasetTree = createDatasetTree(datasetSessionNode, treeView);
         const mvsApi = createMvsApi(imperativeProfile);
         bindMvsApi(mvsApi);
+        mocked(treeView.reveal).mockReturnValue(new Promise((resolve) => resolve(null)));
 
         return {
             session,

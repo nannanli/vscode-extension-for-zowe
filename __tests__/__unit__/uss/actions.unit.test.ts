@@ -130,10 +130,12 @@ describe("USS Action Unit Tests - Function createUSSNodeDialog", () => {
         newMocks.testUSSTree = createUSSTree([createFavoriteUSSNode(globalMocks.testSession, globalMocks.testProfile)],
             [newMocks.ussNode], createTreeView());
 
+        jest.spyOn(newMocks.ussNode, "getChildren").mockResolvedValueOnce([]);
+
         return newMocks;
     }
 
-    it("Tests if createUSSNode is executed successfully", async () => {
+    it("Tests if createUSSNode is executed successfully from createUSSNodeDialog", async () => {
         const globalMocks = createGlobalMocks();
         const blockMocks = await createBlockMocks(globalMocks);
 
@@ -150,10 +152,14 @@ describe("USS Action Unit Tests - Function createUSSNode", () => {
     async function createBlockMocks(globalMocks) {
         const newMocks = {
             testUSSTree: null,
-            ussNode: createUSSNode(globalMocks.testSession, createIProfile())
+            ussNode: createUSSNode(globalMocks.testSession, createIProfile()),
+            testTreeView: createTreeView()
         };
         newMocks.testUSSTree = createUSSTree([createFavoriteUSSNode(globalMocks.testSession, globalMocks.testProfile)],
-            [newMocks.ussNode], createTreeView());
+            [newMocks.ussNode], newMocks.testTreeView);
+        jest.spyOn(newMocks.testTreeView, "reveal").mockReturnValue(new Promise((resolve) => resolve(null)));
+
+        jest.spyOn(newMocks.ussNode, "getChildren").mockResolvedValue([]);
 
         return newMocks;
     }
@@ -163,9 +169,10 @@ describe("USS Action Unit Tests - Function createUSSNode", () => {
         const blockMocks = await createBlockMocks(globalMocks);
 
         globalMocks.showInputBox.mockReturnValueOnce("USSFolder");
+        globalMocks.showInputBox.mockReturnValueOnce("testPath");
 
         await ussNodeActions.createUSSNode(blockMocks.ussNode, blockMocks.testUSSTree, "file");
-        expect(blockMocks.testUSSTree.refreshElement).toHaveBeenCalled();
+        expect(blockMocks.testUSSTree.refresh).toHaveBeenCalled();
         expect(globalMocks.showErrorMessage.mock.calls.length).toBe(0);
     });
 
@@ -176,21 +183,8 @@ describe("USS Action Unit Tests - Function createUSSNode", () => {
         globalMocks.showInputBox.mockReturnValueOnce("");
 
         await ussNodeActions.createUSSNode(blockMocks.ussNode, blockMocks.testUSSTree, "file");
-        expect(blockMocks.testUSSTree.refresh).not.toHaveBeenCalled();
+        expect(blockMocks.testUSSTree.getTreeView).not.toHaveBeenCalled();
         expect(globalMocks.showErrorMessage.mock.calls.length).toBe(0);
-    });
-
-    it("Tests that only the child node is refreshed when createUSSNode() is called on a child node", async () => {
-        const globalMocks = createGlobalMocks();
-        const blockMocks = await createBlockMocks(globalMocks);
-
-        globalMocks.showInputBox.mockReturnValueOnce("USSFolder");
-        const isTopLevel = false;
-        spyOn(ussNodeActions, "refreshAllUSS");
-
-        await ussNodeActions.createUSSNode(blockMocks.ussNode, blockMocks.testUSSTree, "folder", isTopLevel);
-        expect(blockMocks.testUSSTree.refreshElement).toHaveBeenCalled();
-        expect(ussNodeActions.refreshAllUSS).not.toHaveBeenCalled();
     });
 });
 
