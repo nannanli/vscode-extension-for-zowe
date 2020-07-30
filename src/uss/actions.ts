@@ -86,20 +86,6 @@ export async function refreshUSSInTree(node: IZoweUSSTreeNode, ussFileProvider: 
     await ussFileProvider.refreshElement(node);
 }
 
-export async function createUSSNodeDialog(node: IZoweUSSTreeNode, ussFileProvider: IZoweTree<IZoweUSSTreeNode>) {
-    await ussFileProvider.checkCurrentProfile(node);
-    if (Profiles.getInstance().validProfile === ValidProfileEnum.VALID) {
-        const quickPickOptions: vscode.QuickPickOptions = {
-            placeHolder: `What would you like to create at ${node.fullPath}?`,
-            ignoreFocusOut: true,
-            canPickMany: false
-        };
-        const type = await vscode.window.showQuickPick([globals.USS_DIR_CONTEXT, "File"], quickPickOptions);
-        const isTopLevel = true;
-        return createUSSNode(node, ussFileProvider, type, isTopLevel);
-    }
-}
-
 /**
  * Refreshes treeView
  *

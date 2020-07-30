@@ -121,33 +121,6 @@ function createGlobalMocks() {
     return globalMocks;
 }
 
-describe("USS Action Unit Tests - Function createUSSNodeDialog", () => {
-    async function createBlockMocks(globalMocks) {
-        const newMocks = {
-            testUSSTree: null,
-            ussNode: createUSSNode(globalMocks.testSession, createIProfile())
-        };
-        newMocks.testUSSTree = createUSSTree([createFavoriteUSSNode(globalMocks.testSession, globalMocks.testProfile)],
-            [newMocks.ussNode], createTreeView());
-
-        jest.spyOn(newMocks.ussNode, "getChildren").mockResolvedValueOnce([]);
-
-        return newMocks;
-    }
-
-    it("Tests if createUSSNode is executed successfully from createUSSNodeDialog", async () => {
-        const globalMocks = createGlobalMocks();
-        const blockMocks = await createBlockMocks(globalMocks);
-
-        globalMocks.showQuickPick.mockResolvedValueOnce("File");
-        globalMocks.showInputBox.mockReturnValueOnce("USSFolder");
-
-        await ussNodeActions.createUSSNodeDialog(blockMocks.ussNode, blockMocks.testUSSTree);
-        expect(blockMocks.testUSSTree.refreshElement).not.toHaveBeenCalled();
-        expect(globalMocks.showErrorMessage.mock.calls.length).toBe(0);
-    });
-});
-
 describe("USS Action Unit Tests - Function createUSSNode", () => {
     async function createBlockMocks(globalMocks) {
         const newMocks = {

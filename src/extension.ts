@@ -234,7 +234,6 @@ function initUSSProvider(context: vscode.ExtensionContext, ussFileProvider: IZow
     vscode.commands.registerCommand("zowe.uss.text", async (node: IZoweUSSTreeNode) => ussActions.changeFileType(node, false, ussFileProvider));
     vscode.commands.registerCommand("zowe.uss.renameNode", async (node: IZoweUSSTreeNode) => ussFileProvider.rename(node));
     vscode.commands.registerCommand("zowe.uss.uploadDialog", async (node: IZoweUSSTreeNode) => ussActions.uploadDialog(node, ussFileProvider));
-    vscode.commands.registerCommand("zowe.uss.createNode", async (node: IZoweUSSTreeNode) => ussActions.createUSSNodeDialog(node, ussFileProvider));
     vscode.commands.registerCommand("zowe.uss.copyPath", async (node: IZoweUSSTreeNode) => ussActions.copyPath(node));
     vscode.commands.registerCommand("zowe.uss.editFile", (node: IZoweUSSTreeNode) => node.openUSS(false, false, ussFileProvider));
     vscode.commands.registerCommand("zowe.uss.saveSearch", async (node: IZoweUSSTreeNode) => ussFileProvider.saveSearch(node));

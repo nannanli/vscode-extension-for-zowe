@@ -292,14 +292,6 @@
         }
       },
       {
-        "command": "zowe.uss.createNode",
-        "title": "%uss.createNode%",
-        "icon": {
-          "light": "./resources/light/newfile.svg",
-          "dark": "./resources/dark/newfile.svg"
-        }
-      },
-      {
         "command": "zowe.uss.editFile",
         "title": "%uss.editFile%",
         "icon": {

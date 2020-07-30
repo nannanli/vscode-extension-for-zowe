@@ -143,7 +143,6 @@ async function createGlobalMocks() {
             "zowe.uss.text",
             "zowe.uss.renameNode",
             "zowe.uss.uploadDialog",
-            "zowe.uss.createNode",
             "zowe.uss.copyPath",
             "zowe.uss.editFile",
             "zowe.uss.saveSearch",
