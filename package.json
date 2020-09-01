@@ -153,7 +153,11 @@
       },
       {
         "command": "zowe.copyDataSet",
-        "title": "%copy%"
+        "title": "%copyDataSet%"
+      },
+      {
+        "command": "zowe.copyMember",
+        "title": "%copyMember%"
       },
       {
         "command": "zowe.hMigrateDataSet",
@@ -716,8 +720,13 @@
           "group": "5_workspace@3"
         },
         {
-          "when": "view == zowe.explorer && viewItem =~ /^(member|ds).*/",
+          "when": "view == zowe.explorer && viewItem =~ /^ds.*/",
           "command": "zowe.copyDataSet",
+          "group": "6_cutCopyPaste@0"
+        },
+        {
+          "when": "view == zowe.explorer && viewItem =~ /^member.*/",
+          "command": "zowe.copyMember",
           "group": "6_cutCopyPaste@0"
         },
         {
