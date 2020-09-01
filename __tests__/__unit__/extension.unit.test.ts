@@ -112,6 +112,7 @@ async function createGlobalMocks() {
             "zowe.deletePDS",
             "zowe.uploadDialog",
             "zowe.deleteMember",
+            "zowe.editDataSet",
             "zowe.editMember",
             "zowe.removeSession",
             "zowe.removeFavorite",

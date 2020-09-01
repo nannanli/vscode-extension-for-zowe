@@ -188,6 +188,14 @@
         "title": "%uploadDialog%"
       },
       {
+        "command": "zowe.editDataSet",
+        "title": "%editDataSet%",
+        "icon": {
+          "light": "./resources/light/edit.svg",
+          "dark": "./resources/dark/edit.svg"
+        }
+      },
+      {
         "command": "zowe.editMember",
         "title": "%editMember%",
         "icon": {
@@ -733,7 +741,12 @@
           "group": "7_modification@2"
         },
         {
-          "when": "view == zowe.explorer && viewItem =~ /^(member|ds).*/",
+          "when": "view == zowe.explorer && viewItem =~ /^ds.*/",
+          "command": "zowe.editDataSet",
+          "group": "7_modification@3"
+        },
+        {
+          "when": "view == zowe.explorer && viewItem =~ /^member.*/",
           "command": "zowe.editMember",
           "group": "7_modification@3"
         },
