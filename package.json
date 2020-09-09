@@ -720,6 +720,11 @@
           "group": "5_workspace@3"
         },
         {
+          "when": "view == zowe.explorer && viewItem =~ /^(ds|pds).*/",
+          "command": "zowe.allocateLike",
+          "group": "6_cutCopyPaste@0"
+        },
+        {
           "when": "view == zowe.explorer && viewItem =~ /^ds.*/",
           "command": "zowe.copyDataSet",
           "group": "6_cutCopyPaste@0"

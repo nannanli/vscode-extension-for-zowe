@@ -20,6 +20,8 @@
     "deleteMember": "Delete Member",
     "editDataSet": "Edit Data Set",
     "editMember": "Edit Member",
+    "deletePDS": "Delete PDS",
+    "allocateLike": "Allocate Like (New File with Same Attributes)",
     "issueCmd": "Issue Command",
     "uploadDialog": "Upload Member...",
     "pattern": "Search Data Sets by Entering Patterns",
