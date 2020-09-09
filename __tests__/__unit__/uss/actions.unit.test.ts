@@ -127,7 +127,7 @@ describe("USS Action Unit Tests - Function createUSSNode", () => {
         const newMocks = {
             testUSSTree: null,
             ussNode: createUSSNode(globalMocks.testSession, createIProfile()),
-            testTreeView: createTreeView()
+            testTreeView: createTreeView(),
             mockCheckCurrentProfile: jest.fn()
         };
         newMocks.testUSSTree = createUSSTree([createFavoriteUSSNode(globalMocks.testSession, globalMocks.testProfile)],

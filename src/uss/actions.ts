@@ -26,7 +26,6 @@ import { Session } from "@zowe/imperative";
 import * as contextually from "../shared/context";
 import { setFileSaved } from "../utils/workspace";
 import * as nls from "vscode-nls";
-import { returnIconState } from "../shared/actions";
 import { getIconByNode } from "../generators/icons";
 import { returnIconState, resetValidationSettings } from "../shared/actions";
 import { PersistentFilters } from "../PersistentFilters";
