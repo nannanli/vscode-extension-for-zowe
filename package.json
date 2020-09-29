@@ -212,6 +212,10 @@
         "title": "%deleteDataset%"
       },
       {
+        "command": "zowe.allocateLike",
+        "title": "%allocateLike%"
+      },
+      {
         "command": "zowe.uploadDialog",
         "title": "%uploadDialog%"
       },
@@ -569,12 +573,12 @@
           "group": "0_mainframeInteraction"
         },
         {
-          "when": "view == zowe.uss.explorer && viewItem =~ /^directory|ussSession/",
+          "when": "view == zowe.uss.explorer && viewItem =~ /^(directory|(?!.*_fav.*)ussSession.*)/",
           "command": "zowe.uss.createFolder",
           "group": "1_create@0"
         },
         {
-          "when": "view == zowe.uss.explorer && viewItem =~ /^directory|ussSession/",
+          "when": "view == zowe.uss.explorer && viewItem =~ /^(directory|(?!.*_fav.*)ussSession.*)/",
           "command": "zowe.uss.createFile",
           "group": "1_create@1"
         },

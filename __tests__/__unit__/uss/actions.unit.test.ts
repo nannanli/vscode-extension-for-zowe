@@ -160,6 +160,7 @@ describe("USS Action Unit Tests - Function createUSSNode", () => {
         expect(blockMocks.testUSSTree.refreshElement).not.toHaveBeenCalled();
         expect(globalMocks.showErrorMessage.mock.calls.length).toBe(0);
     });
+});
 
 describe("USS Action Unit Tests - Function createUSSNode", () => {
     async function createBlockMocks(globalMocks) {
@@ -643,5 +644,4 @@ describe("USS Action Unit Tests - function uploadFile", () => {
         await ussNodeActions.uploadFile(blockMocks.ussNode, { fileName: "madeup" } as any);
         expect(ZoweExplorerApiRegister.getUssApi(null).putContent).toBeCalled();
     });
-
 });
