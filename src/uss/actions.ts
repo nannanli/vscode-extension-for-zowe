@@ -74,8 +74,8 @@ export async function createUSSNode(node: IZoweUSSTreeNode, ussFileProvider: IZo
                 ussFileProvider.refreshElement(node);
             }
             const newNode = await node.getChildren().then((children) => children.find((child) => child.label === name));
-            ussFileProvider.getTreeView().reveal(node, { select: true, focus: true }).then(() =>
-                ussFileProvider.getTreeView().reveal(newNode, { select: true, focus: true }));
+            await ussFileProvider.getTreeView().reveal(node, { select: true, focus: true });
+            ussFileProvider.getTreeView().reveal(newNode, { select: true, focus: true });
         } catch (err) {
             errorHandling(err, node.mProfileName, localize("createUSSNode.error.create", "Unable to create node: ") + err.message);
             throw (err);

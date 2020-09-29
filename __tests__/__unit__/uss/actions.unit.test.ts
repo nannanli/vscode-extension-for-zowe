@@ -13,7 +13,7 @@ jest.mock("fs");
 
 import * as ussNodeActions from "../../../src/uss/actions";
 import { createUSSTree, createUSSNode, createFavoriteUSSNode } from "../../../__mocks__/mockCreators/uss";
-import { createIProfile, createISession, createTreeView, createTextDocument, createFileResponse } from "../../../__mocks__/mockCreators/shared";
+import { createIProfile, createISession, createTreeView, createTextDocument, createFileResponse, createValidIProfile } from "../../../__mocks__/mockCreators/shared";
 import { ValidProfileEnum, Profiles } from "../../../src/Profiles";
 import { ZoweExplorerApiRegister } from "../../../src/api/ZoweExplorerApiRegister";
 import * as vscode from "vscode";
@@ -58,7 +58,7 @@ function createGlobalMocks() {
         isFileTagBinOrAscii: jest.fn(),
         theia: false,
         testSession: createISession(),
-        testProfile: createIProfile(),
+        testProfile: createValidIProfile(),
         ProgressLocation: jest.fn().mockImplementation(() => {
             return {
                 Notification: 15
@@ -130,16 +130,29 @@ describe("USS Action Unit Tests - Function createUSSNode", () => {
             testUSSTree: null,
             ussNode: createUSSNode(globalMocks.testSession, createIProfile()),
             testTreeView: createTreeView(),
-            mockCheckCurrentProfile: jest.fn()
+            mockCheckCurrentProfile: jest.fn(),
+            ussApi: createUssApi(globalMocks.testProfile)
         };
         newMocks.testUSSTree = createUSSTree([createFavoriteUSSNode(globalMocks.testSession, globalMocks.testProfile)],
             [newMocks.ussNode], newMocks.testTreeView);
-        jest.spyOn(newMocks.testTreeView, "reveal").mockReturnValue(new Promise((resolve) => resolve(null)));
-
-        jest.spyOn(newMocks.ussNode, "getChildren").mockResolvedValue([]);
+        bindUssApi(newMocks.ussApi);
 
         return newMocks;
     }
+
+    it("Tests that only the child node is refreshed when createUSSNode() is called on a child node", async () => {
+        const globalMocks = createGlobalMocks();
+        const blockMocks = await createBlockMocks(globalMocks);
+
+        globalMocks.showInputBox.mockReturnValue("USSFolder");
+        jest.spyOn(blockMocks.ussNode, "getChildren").mockResolvedValueOnce([]);
+        const isTopLevel = false;
+        spyOn(ussNodeActions, "refreshAllUSS");
+
+        await ussNodeActions.createUSSNode(blockMocks.ussNode, blockMocks.testUSSTree, "folder", isTopLevel);
+        expect(blockMocks.testUSSTree.refreshElement).toHaveBeenCalled();
+        expect(ussNodeActions.refreshAllUSS).not.toHaveBeenCalled();
+    });
 
     it("Tests if createUSSNode is executed successfully with Unverified profile", async () => {
         const globalMocks = createGlobalMocks();
@@ -153,30 +166,25 @@ describe("USS Action Unit Tests - Function createUSSNode", () => {
                 };
             })
         });
-        globalMocks.showQuickPick.mockResolvedValueOnce("File");
+        jest.spyOn(blockMocks.ussNode, "getChildren").mockResolvedValueOnce([]);
+        globalMocks.showQuickPick.mockResolvedValueOnce("Folder");
         globalMocks.showInputBox.mockReturnValueOnce("USSFolder");
 
-        await ussNodeActions.createUSSNodeDialog(blockMocks.ussNode, blockMocks.testUSSTree);
+        await ussNodeActions.createUSSNodeDialog(blockMocks.ussNode.getParent(), blockMocks.testUSSTree);
         expect(blockMocks.testUSSTree.refreshElement).not.toHaveBeenCalled();
         expect(globalMocks.showErrorMessage.mock.calls.length).toBe(0);
     });
-});
 
-describe("USS Action Unit Tests - Function createUSSNode", () => {
-    async function createBlockMocks(globalMocks) {
-        const ussApi = createUssApi(globalMocks.testProfile);
-        bindUssApi(ussApi);
+    it("Tests that createUSSNode does not execute if node name was not entered", async () => {
+        const globalMocks = createGlobalMocks();
+        const blockMocks = await createBlockMocks(globalMocks);
 
-        const newMocks = {
-            testUSSTree: null,
-            ussNode: createUSSNode(globalMocks.testSession, createIProfile()),
-            ussApi
-        };
-        newMocks.testUSSTree = createUSSTree([createFavoriteUSSNode(globalMocks.testSession, globalMocks.testProfile)],
-            [newMocks.ussNode], createTreeView());
+        globalMocks.showInputBox.mockReturnValueOnce("");
 
-        return newMocks;
-    }
+        await ussNodeActions.createUSSNode(blockMocks.ussNode, blockMocks.testUSSTree, "file");
+        expect(blockMocks.testUSSTree.getTreeView).not.toHaveBeenCalled();
+        expect(globalMocks.showErrorMessage.mock.calls.length).toBe(0);
+    });
 
     it("Tests that createUSSNode is executed successfully", async () => {
         const globalMocks = createGlobalMocks();
@@ -192,32 +200,14 @@ describe("USS Action Unit Tests - Function createUSSNode", () => {
         blockMocks.ussNode.fullPath = "/test/path";
 
         globalMocks.showInputBox.mockReturnValueOnce("testFile");
+        jest.spyOn(blockMocks.testTreeView, "reveal").mockReturnValueOnce(new Promise((resolve) => resolve(null)));
+
+        jest.spyOn(blockMocks.ussNode, "getChildren").mockResolvedValueOnce([]);
 
         await ussNodeActions.createUSSNode(blockMocks.ussNode, blockMocks.testUSSTree, "file");
         expect(createSpy).toBeCalledWith("/test/path/testFile", "file");
     });
-    it("Tests that createUSSNode does not execute if node name was not entered", async () => {
-        const globalMocks = createGlobalMocks();
-        const blockMocks = await createBlockMocks(globalMocks);
 
-        globalMocks.showInputBox.mockReturnValueOnce("");
-
-        await ussNodeActions.createUSSNode(blockMocks.ussNode, blockMocks.testUSSTree, "file");
-        expect(blockMocks.testUSSTree.getTreeView).not.toHaveBeenCalled();
-        expect(globalMocks.showErrorMessage.mock.calls.length).toBe(0);
-    });
-    it("Tests that only the child node is refreshed when createUSSNode() is called on a child node", async () => {
-        const globalMocks = createGlobalMocks();
-        const blockMocks = await createBlockMocks(globalMocks);
-
-        globalMocks.showInputBox.mockReturnValueOnce("USSFolder");
-        const isTopLevel = false;
-        spyOn(ussNodeActions, "refreshAllUSS");
-
-        await ussNodeActions.createUSSNode(blockMocks.ussNode, blockMocks.testUSSTree, "folder", isTopLevel);
-        expect(blockMocks.testUSSTree.refreshElement).toHaveBeenCalled();
-        expect(ussNodeActions.refreshAllUSS).not.toHaveBeenCalled();
-    });
     it("Tests that the error is handled if createUSSNode is unsuccessful", async () => {
         const globalMocks = createGlobalMocks();
         const blockMocks = await createBlockMocks(globalMocks);
