@@ -166,9 +166,9 @@ describe("USS Action Unit Tests - Function createUSSNode", () => {
                 };
             })
         });
-        jest.spyOn(blockMocks.ussNode, "getChildren").mockResolvedValueOnce([]);
+        jest.spyOn(blockMocks.ussNode.getParent(), "getChildren").mockResolvedValueOnce([]);
         globalMocks.showQuickPick.mockResolvedValueOnce("Folder");
-        globalMocks.showInputBox.mockReturnValueOnce("USSFolder");
+        globalMocks.showInputBox.mockReturnValue("USSFolder");
 
         await ussNodeActions.createUSSNodeDialog(blockMocks.ussNode.getParent(), blockMocks.testUSSTree);
         expect(blockMocks.testUSSTree.refreshElement).not.toHaveBeenCalled();
